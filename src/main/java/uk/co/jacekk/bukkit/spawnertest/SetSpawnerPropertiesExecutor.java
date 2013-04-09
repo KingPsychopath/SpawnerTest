@@ -70,8 +70,8 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
             return;
         }
 
-        if (args.length != 7) {
-            sender.sendMessage(ChatColor.RED + "/" + label + " <type> <max_delay> <min_delay> <count> <range> <max_entities> <player_range>");
+        if (args.length != 9) {
+            sender.sendMessage(ChatColor.RED + "/" + label + " <type> <max_delay> <min_delay> <count> <range> <max_entities> <player_range> <above> <below>");
             return;
         }
 
@@ -106,6 +106,7 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         spawner.setRange(Integer.parseInt(args[4]));
         spawner.setMaxNearbyEntities(Integer.parseInt(args[5]));
         spawner.setRequiredPlayerRange(Integer.parseInt(args[6]));
+        spawner.setVerticalRange(Integer.parseInt(args[8]), Integer.parseInt(args[7]));
 
         sender.sendMessage(ChatColor.GREEN + "Spawner updated");
     }
