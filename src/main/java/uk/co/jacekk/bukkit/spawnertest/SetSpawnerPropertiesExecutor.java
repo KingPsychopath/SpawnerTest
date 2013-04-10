@@ -163,7 +163,7 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
 
         Firework firework = player.getWorld().spawn(target.getLocation(), Firework.class);
         firework.setVelocity(new Vector(0.0d, 1.5d, 0.0d));
-
+        
         spawner.setSpawnedEntity(firework, (args.length == 0));
         spawner.setMaxDelay(1);
         spawner.setMinDelay(1);
@@ -171,8 +171,39 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         spawner.setRange(10);
         spawner.setMaxNearbyEntities(1000);
         spawner.setRequiredPlayerRange(20);
-
+        
         sender.sendMessage(ChatColor.GREEN + "Spawner updated");
+    }
+    
+    @CommandHandler(names = { "multispawner", "multi" }, description = "makes a horrible tnt spawner")
+    public void multispawner(CommandSender sender, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "You must be a Player to use this command");
+            return;
+        }
+
+        Player player = (Player) sender;
+        Block target = player.getTargetBlock(null, 10);
+
+        if (target.getType() != Material.MOB_SPAWNER) {
+            player.sendMessage(ChatColor.RED + "You must be looking at a spawner");
+            return;
+        }
+
+        CreatureSpawner spawner = (CreatureSpawner) target.getState();
+        
+        spawner.clearSpawnPotentials();
+        spawner.addPotentialSpawnedType(EntityType.SHEEP, 1);
+        spawner.addPotentialSpawnedType(EntityType.COW, 1);
+        spawner.addPotentialSpawnedType(EntityType.PIG, 1);
+        spawner.addPotentialSpawnedType(EntityType.WOLF, 1);
+        
+        spawner.setMaxDelay(1);
+        spawner.setMinDelay(1);
+        spawner.setCount(1);
+        spawner.setRange(10);
+        spawner.setMaxNearbyEntities(1000);
+        spawner.setRequiredPlayerRange(4);
     }
 
 }
