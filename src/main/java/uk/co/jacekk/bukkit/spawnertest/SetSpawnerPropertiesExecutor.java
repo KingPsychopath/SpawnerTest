@@ -2,9 +2,11 @@ package uk.co.jacekk.bukkit.spawnertest;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.SpawnerEntry;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.defaults.SpawnpointCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -60,6 +62,12 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         player.sendMessage("Range: " + spawner.getRange());
         player.sendMessage("Max entities: " + spawner.getMaxNearbyEntities());
         player.sendMessage("Player range: " + spawner.getRequiredPlayerRange());
+        player.sendMessage("Spawn potentials:");
+        
+        for (SpawnerEntry entry : spawner.getSpawnPotentials()){
+            player.sendMessage(entry.getEntityType().name() + " " + entry.getWeight());
+        }
+        
         player.sendMessage("============================");
     }
 
