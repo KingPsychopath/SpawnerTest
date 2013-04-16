@@ -1,6 +1,7 @@
 package uk.co.jacekk.bukkit.spawnertest;
 
 import org.bukkit.ChatColor;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.SpawnerEntry;
 import org.bukkit.block.Block;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.util.Vector;
 
@@ -107,6 +109,7 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         CreatureSpawner spawner = (CreatureSpawner) target.getState();
 
         spawner.setSpawnedType(type);
+        spawner.setDelay(Integer.parseInt(args[2]));
         spawner.setMaxDelay(Integer.parseInt(args[1]));
         spawner.setMinDelay(Integer.parseInt(args[2]));
         spawner.setCount(Integer.parseInt(args[3]));
@@ -141,6 +144,7 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         tnt.setVelocity(new Vector(0.0d, 1.5d, 0.0d));
 
         spawner.setSpawnedEntity(tnt, false);
+        spawner.setDelay(1);
         spawner.setMaxDelay(1);
         spawner.setMinDelay(1);
         spawner.setCount(1);
@@ -172,6 +176,7 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         firework.setVelocity(new Vector(0.0d, 1.5d, 0.0d));
         
         spawner.setSpawnedEntity(firework, (args.length == 0));
+        spawner.setDelay(1);
         spawner.setMaxDelay(1);
         spawner.setMinDelay(1);
         spawner.setCount(1);
@@ -200,17 +205,51 @@ public class SetSpawnerPropertiesExecutor extends BaseCommandExecutor<SpawnerTes
         CreatureSpawner spawner = (CreatureSpawner) target.getState();
         
         spawner.clearSpawnPotentials();
-        spawner.addPotentialSpawnedType(EntityType.SHEEP, 1);
-        spawner.addPotentialSpawnedType(EntityType.COW, 1);
-        spawner.addPotentialSpawnedType(EntityType.PIG, 1);
-        spawner.addPotentialSpawnedType(EntityType.WOLF, 1);
+        spawner.addSpawnerEntry(new SpawnerEntry(EntityType.SHEEP, 1));
+        spawner.addSpawnerEntry(new SpawnerEntry(EntityType.PIG, 1));
+        spawner.addSpawnerEntry(new SpawnerEntry(EntityType.COW, 1));
+        spawner.addSpawnerEntry(new SpawnerEntry(EntityType.WOLF, 1));
         
+        spawner.setDelay(1);
         spawner.setMaxDelay(1);
         spawner.setMinDelay(1);
         spawner.setCount(1);
         spawner.setRange(10);
         spawner.setMaxNearbyEntities(1000);
         spawner.setRequiredPlayerRange(4);
+    }
+    
+    @CommandHandler(names = { "sheepspawner", "sheep" }, description = "makes a horrible tnt spawner")
+    public void sheepspawner(CommandSender sender, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "You must be a Player to use this command");
+            return;
+        }
+
+        Player player = (Player) sender;
+        Block target = player.getTargetBlock(null, 10);
+
+        if (target.getType() != Material.MOB_SPAWNER) {
+            player.sendMessage(ChatColor.RED + "You must be looking at a spawner");
+            return;
+        }
+
+        CreatureSpawner spawner = (CreatureSpawner) target.getState();
+        
+        spawner.setDelay(1);
+        spawner.setMaxDelay(1);
+        spawner.setMinDelay(1);
+        spawner.setCount(1);
+        spawner.setRange(10);
+        spawner.setMaxNearbyEntities(1000);
+        spawner.setRequiredPlayerRange(20);
+        
+        Sheep sheep = player.getWorld().spawn(target.getLocation(), Sheep.class);
+        
+        for (DyeColor color : DyeColor.values()){
+            sheep.setColor(color);
+            spawner.addSpawnerEntry(spawner.createSpawnerEntry(sheep));
+        }
     }
 
 }
